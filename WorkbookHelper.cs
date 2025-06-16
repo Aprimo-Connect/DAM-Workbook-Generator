@@ -37,26 +37,26 @@ namespace Aprimo.ConfigurationWorkbookGenerator
 
         private readonly string SubDomain;
         private readonly string ClientId;
-        private readonly string UserName;
-        private readonly string UserToken;
+        private readonly string ClientSecret;
+        private readonly string AuthURL;
         private readonly string AprimoMoUrl;
         private readonly string AprimoDamUrl;
         private static AccessHelper accessHelper;
 
         private readonly UiHelper UiHelper;
 
-        public WorkbookHelper(string subDomain, string clientId, string userName, string userToken, UiHelper uiHelper)
+        public WorkbookHelper(string subDomain, string clientId, string clientSecret, UiHelper uiHelper)
         {
             this.SubDomain = subDomain;
             this.ClientId = clientId;
-            this.UserName = userName;
-            this.UserToken = userToken;
+            this.ClientSecret = clientSecret;
             this.UiHelper = uiHelper;
 
+            AuthURL = string.Format(@"https://{0}.aprimo.com", subDomain);
             AprimoMoUrl = string.Format(@"https://{0}.aprimo.com/api", subDomain);
             AprimoDamUrl = string.Format(@"https://{0}.dam.aprimo.com/api/core", subDomain);
 
-            accessHelper = new AccessHelper(userName, userToken, AprimoMoUrl, clientId);
+            accessHelper = new AccessHelper(clientId, clientSecret, AuthURL);
         }
 
         internal void ExportConfiguration(string outputPath, string pathToFileWithNotes, Dictionary<string, bool> exportObjects)
@@ -102,11 +102,9 @@ namespace Aprimo.ConfigurationWorkbookGenerator
                 coverSheet.Cells[1, 1].Value = "Configuration Workbook";
                 coverSheet.Cells[2, 1].Value = "Environment";
                 coverSheet.Cells[2, 2].Value = this.SubDomain;
-                coverSheet.Cells[3, 1].Value = "User Account Used";
-                coverSheet.Cells[3, 2].Value = this.UserName;
-                coverSheet.Cells[4, 1].Value = "Generated On";
-                coverSheet.Cells[4, 2].Value = DateTime.Now;
-                coverSheet.Cells[4, 2].Style.Numberformat.Format = "dd/mm/yyyy HH:mm:ss";
+                coverSheet.Cells[3, 1].Value = "Generated On";
+                coverSheet.Cells[3, 2].Value = DateTime.Now;
+                coverSheet.Cells[3, 2].Style.Numberformat.Format = "dd/mm/yyyy HH:mm:ss";
 
 
                 if (ExportObjects["userGroups"] == true)
@@ -1471,28 +1469,6 @@ namespace Aprimo.ConfigurationWorkbookGenerator
             //    worksheet.Column(i).BestFit = true;
             //    worksheet.Column(i).AutoFit();
             //}
-
-        }
-
-        private void Logon()
-        {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
-                                     | SecurityProtocolType.Tls11
-                                     | SecurityProtocolType.Tls12;
-
-            string basicToken = Convert.ToBase64String(
-            Encoding.UTF8.GetBytes(string.Format("{0}:{1}",
-            UserName, UserToken)));
-
-            using (WebClient webClient = new WebClient())
-            {
-                webClient.Headers.Add("client-id", ClientId);
-                webClient.Headers.Add("Authorization", string.Format("Basic {0}", basicToken));
-
-                string response = Encoding.ASCII.GetString(webClient.UploadData(AprimoMoUrl, new byte[] { }));
-                dynamic jsonResponse = JsonConvert.DeserializeObject(response);
-                Token = jsonResponse.accessToken;
-            }
 
         }
     }

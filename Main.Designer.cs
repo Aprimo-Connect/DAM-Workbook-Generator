@@ -32,11 +32,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.txtSubdomain = new System.Windows.Forms.TextBox();
             this.txtClientId = new System.Windows.Forms.TextBox();
-            this.txtUserName = new System.Windows.Forms.TextBox();
-            this.txtUserToken = new System.Windows.Forms.TextBox();
+            this.txtClientSecret = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtOutputFilePath = new System.Windows.Forms.TextBox();
@@ -52,6 +50,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbLangauages = new System.Windows.Forms.CheckBox();
             this.cbSelectAll = new System.Windows.Forms.CheckBox();
             this.cbContentTypes = new System.Windows.Forms.CheckBox();
             this.cbRules = new System.Windows.Forms.CheckBox();
@@ -64,7 +63,6 @@
             this.cbFieldDefinitions = new System.Windows.Forms.CheckBox();
             this.cbFieldGroups = new System.Windows.Forms.CheckBox();
             this.cbUserGroups = new System.Windows.Forms.CheckBox();
-            this.cbLangauages = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -103,22 +101,12 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 123);
+            this.label3.Location = new System.Drawing.Point(0, 121);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(87, 20);
+            this.label3.Size = new System.Drawing.Size(104, 20);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Username:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 165);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(91, 20);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "User token:";
+            this.label3.Text = "Client Secret:";
             // 
             // txtSubdomain
             // 
@@ -136,32 +124,22 @@
             this.txtClientId.Size = new System.Drawing.Size(315, 26);
             this.txtClientId.TabIndex = 6;
             // 
-            // txtUserName
+            // txtClientSecret
             // 
-            this.txtUserName.Location = new System.Drawing.Point(112, 118);
-            this.txtUserName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(315, 26);
-            this.txtUserName.TabIndex = 7;
-            // 
-            // txtUserToken
-            // 
-            this.txtUserToken.Location = new System.Drawing.Point(112, 160);
-            this.txtUserToken.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtUserToken.Name = "txtUserToken";
-            this.txtUserToken.Size = new System.Drawing.Size(315, 26);
-            this.txtUserToken.TabIndex = 8;
+            this.txtClientSecret.Location = new System.Drawing.Point(112, 118);
+            this.txtClientSecret.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtClientSecret.Name = "txtClientSecret";
+            this.txtClientSecret.Size = new System.Drawing.Size(315, 26);
+            this.txtClientSecret.TabIndex = 7;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.txtUserToken);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.txtUserName);
+            this.groupBox1.Controls.Add(this.txtClientSecret);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.txtClientId);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.txtSubdomain);
-            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Location = new System.Drawing.Point(20, 20);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
@@ -309,6 +287,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "What do you want to export:";
             // 
+            // cbLangauages
+            // 
+            this.cbLangauages.AutoSize = true;
+            this.cbLangauages.Location = new System.Drawing.Point(238, 40);
+            this.cbLangauages.Name = "cbLangauages";
+            this.cbLangauages.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.cbLangauages.Size = new System.Drawing.Size(304, 24);
+            this.cbLangauages.TabIndex = 26;
+            this.cbLangauages.Text = "Extract labels in supported languages ";
+            this.cbLangauages.UseVisualStyleBackColor = true;
+            // 
             // cbSelectAll
             // 
             this.cbSelectAll.AutoSize = true;
@@ -454,17 +443,6 @@
             this.cbUserGroups.Text = "User Groups";
             this.cbUserGroups.UseVisualStyleBackColor = true;
             // 
-            // cbLangauages
-            // 
-            this.cbLangauages.AutoSize = true;
-            this.cbLangauages.Location = new System.Drawing.Point(238, 40);
-            this.cbLangauages.Name = "cbLangauages";
-            this.cbLangauages.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.cbLangauages.Size = new System.Drawing.Size(304, 24);
-            this.cbLangauages.TabIndex = 26;
-            this.cbLangauages.Text = "Extract labels in supported languages ";
-            this.cbLangauages.UseVisualStyleBackColor = true;
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -503,11 +481,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtSubdomain;
         private System.Windows.Forms.TextBox txtClientId;
-        private System.Windows.Forms.TextBox txtUserName;
-        private System.Windows.Forms.TextBox txtUserToken;
+        private System.Windows.Forms.TextBox txtClientSecret;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtOutputFilePath;

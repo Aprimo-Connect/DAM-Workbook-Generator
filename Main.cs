@@ -23,10 +23,9 @@ namespace Aprimo.ConfigurationWorkbookGenerator
 
                 string SubDomain = txtSubdomain.Text.Trim();
                 string ClientId = txtClientId.Text.Trim();
-                string UserToken = txtUserToken.Text.Trim();
-                string UserName = txtUserName.Text.Trim();
+                string ClientSecret = txtClientSecret.Text.Trim();
 
-                if ((SubDomain.Length == 0) || (ClientId.Length == 0) || (UserToken.Length == 0) || (UserName.Length == 0))
+                if ((SubDomain.Length == 0) || (ClientId.Length == 0) || (ClientSecret.Length == 0))
                 {
                     MessageBox.Show("Please input Subdomain, Client ID, User name and User token.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -46,7 +45,7 @@ namespace Aprimo.ConfigurationWorkbookGenerator
                     exportObjects.Add("watermarks", cbWatermarks.Checked);
                     exportObjects.Add("languages", cbLangauages.Checked);
 
-                    WorkbookHelper helper = new WorkbookHelper(SubDomain, ClientId, UserName, UserToken, logger);
+                    WorkbookHelper helper = new WorkbookHelper(SubDomain, ClientId, ClientSecret, logger);
                     helper.ExportConfiguration(txtOutputFilePath.Text, txtInputFilePath.Text, exportObjects);
                     txtInputFilePath.Text = txtOutputFilePath.Text;
                 }
@@ -111,7 +110,8 @@ namespace Aprimo.ConfigurationWorkbookGenerator
                 cbWatermarks.Checked = true;
                 cbRules.Checked = true;
                 cbTranslations.Checked = true;
-            };
+            }
+            ;
             if (cbSelectAll.Checked == false)
             {
                 cbUserGroups.Checked = false;
@@ -125,7 +125,8 @@ namespace Aprimo.ConfigurationWorkbookGenerator
                 cbWatermarks.Checked = false;
                 cbRules.Checked = false;
                 cbTranslations.Checked = false;
-            };
+            }
+            ;
 
         }
     }
