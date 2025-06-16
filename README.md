@@ -13,6 +13,8 @@ This tool can help you generate a workbook that outlines how your DAM is configu
 - rules
 - content types
 
+To run the tool, you will need to create a Registration, follow this guide to create one: https://developers.aprimo.com/docs/OAuth2#oauth-20-flow---client-credentials. The tool will need client ID and client secret from this registration, as well as the environment instance name to run.
+
 ### Aprimo's Open Source Policy 
 This code is provided by Aprimo _as-is_ as an example of how you might solve a specific business problem. It is not intended for direct use in Production without modification.
 
