@@ -337,7 +337,7 @@ namespace Aprimo.ConfigurationWorkbookGenerator
                 dynamic jsonResponse = GetRestResponse(url, new Dictionary<string, string>());
                 foreach (dynamic permission in jsonResponse.items)
                 {
-                    RolePermissions.Add(permission.name.ToString(), permission.labels[0].value.ToString());
+                    RolePermissions.Add(permission.name.ToString(), permission.labels[4].value.ToString());
                 }
 
                 url = (jsonResponse._links.next == null) ? "" : jsonResponse._links.next.href;
@@ -402,6 +402,10 @@ namespace Aprimo.ConfigurationWorkbookGenerator
             {
                 return JsonConvert.DeserializeObject(response.Content);
 
+            }
+            if (response.StatusCode.ToString().Equals("BadRequest"))
+            {
+                throw new Exception(response.ErrorMessage, response.ErrorException);
             }
             return null;
         }
