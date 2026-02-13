@@ -208,9 +208,9 @@ namespace Aprimo.ConfigurationWorkbookGenerator
 
                 this.UiHelper.LogInfo(string.Format("Done. Total runtime {0}", stopwatch.Elapsed), true);
             }
-            catch
+            catch (Exception ex) 
             {
-                throw;
+                throw ex;
             }
             finally
             {
@@ -237,6 +237,7 @@ namespace Aprimo.ConfigurationWorkbookGenerator
             }
             if (ExportObjects["fieldDefinitions"] == true)
             {
+                Classifications = LoadAllObjects("{0}/classifications", new Dictionary<string, string>() { { "select-classification", "NamePath" } });
                 FieldDefinitions = LoadAllObjects("{0}/fielddefinitions", new Dictionary<string, string>());
                 FieldGroups = LoadAllObjects("{0}/fieldgroups", new Dictionary<string, string>());
             }
@@ -439,7 +440,7 @@ namespace Aprimo.ConfigurationWorkbookGenerator
                     GetClassificationPermission(worksheet, classificationId, namePath, "RecordPermissions", ref rowIndex);
                     GetClassificationPermission(worksheet, classificationId, namePath, "DownloadPermissions", ref rowIndex);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
                 }
@@ -689,6 +690,7 @@ namespace Aprimo.ConfigurationWorkbookGenerator
             {
                 Guid id;
                 string gettingType;
+                string targetType;
                 string label;
                 switch (action.actionType.ToString().ToUpper())
                 {
@@ -769,7 +771,15 @@ namespace Aprimo.ConfigurationWorkbookGenerator
                         actionTexts.Add(string.Format("set value of {0} to {1}", label, action.reference.ToString()));
                         break;
                     case "SENDEMAIL":
-                        actionTexts.Add(string.Format("send email using the following reference:\n{0}", action.reference.ToString()));
+                        targetType = action.targetType.ToString().ToUpperInvariant();
+                        if (targetType == "REFERENCE")
+                        {
+                            actionTexts.Add(string.Format("send email using the following reference:\n{0}", action.reference.ToString()));
+                        }
+                        else if (targetType == "SUBSCRIBERSLIST")
+                        {
+                            actionTexts.Add(string.Format("send email to subscribers list using the following reference:\n{0}", action.subscribersList.ToString()));
+                        }
                         break;
                     case "CREATEPRESETCROPS":
                         actionTexts.Add("create preset crops for the record");
@@ -794,6 +804,9 @@ namespace Aprimo.ConfigurationWorkbookGenerator
                         break;
                     case "DELETEPUBLICLINKS":
                         actionTexts.Add(string.Format("delete public links"));
+                        break;
+                    case "PREDICTIVEMETADATA":
+                        actionTexts.Add(string.Format("extract predictive metadata values"));
                         break;
                     default:
                         actionTexts.Add(string.Format("{0} (unknown action type - add type to GetRuleActionsText-method)", action.actionType.ToString()));
@@ -1241,6 +1254,8 @@ namespace Aprimo.ConfigurationWorkbookGenerator
             worksheet.Cells[1, columnCounter++].Value = "Unique Identifier";
             worksheet.Cells[1, columnCounter++].Value = "Default Value";
             worksheet.Cells[1, columnCounter++].Value = "Default Value Triggers";
+            worksheet.Cells[1, columnCounter++].Value = "Predicted field";
+            worksheet.Cells[1, columnCounter++].Value = "Hint";
             worksheet.Cells[1, columnCounter++].Value = "Validation";
             worksheet.Cells[1, columnCounter++].Value = "Validation message";
             worksheet.Cells[1, columnCounter++].Value = "Field Groups";
@@ -1282,6 +1297,12 @@ namespace Aprimo.ConfigurationWorkbookGenerator
                 worksheet.Cells[i, columnCounter++].Value = fieldDefinition.isUniqueIdentifier.ToString();
                 worksheet.Cells[i, columnCounter++].Value = fieldDefinition.defaultValue.ToString();
                 worksheet.Cells[i, columnCounter++].Value = JsonArrayToString(fieldDefinition.resetToDefaultTriggers);
+                try
+                {
+                    worksheet.Cells[i, columnCounter++].Value = fieldDefinition.metadataPredictionEnabled.ToString();
+                    worksheet.Cells[i, columnCounter++].Value = fieldDefinition.hints.ToString();
+                }
+                catch (Exception) { }
                 worksheet.Cells[i, columnCounter++].Value = fieldDefinition.validation.ToString();
                 worksheet.Cells[i, columnCounter++].Value = fieldDefinition.validationErrorMessage.ToString();
                 worksheet.Cells[i, columnCounter++].Value = string.Join(", ", ConvertFieldGroupIdsToNames(fieldDefinition.memberships));
