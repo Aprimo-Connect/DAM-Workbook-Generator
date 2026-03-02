@@ -228,22 +228,40 @@ namespace Aprimo.ConfigurationWorkbookGenerator
             }
             if (ExportObjects["classificationPermissions"] == true)
             {
-                Classifications = LoadAllObjects("{0}/classifications", new Dictionary<string, string>() { { "select-classification", "NamePath" } });
+                if (Classifications == null)
+                {
+                    Classifications = LoadAllObjects("{0}/classifications", new Dictionary<string, string>() { { "select-classification", "NamePath" } });
+                }
                 UserGroups = LoadAllObjects("{0}/usergroups", new Dictionary<string, string>());
             }
             if (ExportObjects["fieldGroups"] == true)
             {
-                FieldGroups = LoadAllObjects("{0}/fieldgroups", new Dictionary<string, string>());
+                if (FieldGroups == null)
+                {
+                    FieldGroups = LoadAllObjects("{0}/fieldgroups", new Dictionary<string, string>());
+                }
             }
             if (ExportObjects["fieldDefinitions"] == true)
             {
-                Classifications = LoadAllObjects("{0}/classifications", new Dictionary<string, string>() { { "select-classification", "NamePath" } });
-                FieldDefinitions = LoadAllObjects("{0}/fielddefinitions", new Dictionary<string, string>());
-                FieldGroups = LoadAllObjects("{0}/fieldgroups", new Dictionary<string, string>());
+                if (Classifications == null)
+                {
+                    Classifications = LoadAllObjects("{0}/classifications", new Dictionary<string, string>() { { "select-classification", "NamePath" } });
+                }
+                if (FieldDefinitions == null)
+                {
+                    FieldDefinitions = LoadAllObjects("{0}/fielddefinitions", new Dictionary<string, string>());
+                }
+                if (FieldGroups == null)
+                {
+                    FieldGroups = LoadAllObjects("{0}/fieldgroups", new Dictionary<string, string>());
+                }
             }
             if (ExportObjects["userGroups"] == true || ExportObjects["functionalPermissions"] == true)
             {
-                UserGroups = LoadAllObjects("{0}/usergroups", new Dictionary<string, string>());
+                if (UserGroups == null)
+                {
+                    UserGroups = LoadAllObjects("{0}/usergroups", new Dictionary<string, string>());
+                }
             }
             if (ExportObjects["watermarks"] == true)
             {
@@ -255,15 +273,25 @@ namespace Aprimo.ConfigurationWorkbookGenerator
             }
             if (ExportObjects["rules"] == true)
             {
-                Rules = LoadAllObjects("{0}/rules", new Dictionary<string, string>() { { "select-Rule", "conditions, actions" } });
-                FieldDefinitions = LoadAllObjects("{0}/fielddefinitions", new Dictionary<string, string>());
-                Classifications = LoadAllObjects("{0}/classifications", new Dictionary<string, string>() { { "select-classification", "NamePath" } });
+
+                if (Classifications == null)
+                {
+                    Classifications = LoadAllObjects("{0}/classifications", new Dictionary<string, string>() { { "select-classification", "NamePath" } });
+                }
+                if (FieldDefinitions == null)
+                {
+                    FieldDefinitions = LoadAllObjects("{0}/fielddefinitions", new Dictionary<string, string>());
+                }
                 Watermarks = LoadAllObjects("{0}/watermarks", new Dictionary<string, string>());
+                Rules = LoadAllObjects("{0}/rules", new Dictionary<string, string>() { { "select-Rule", "conditions, actions" } });
             }
             if (ExportObjects["contentTypes"] == true)
-            {
+            {                
+                if (FieldDefinitions == null)
+                {
+                    FieldDefinitions = LoadAllObjects("{0}/fielddefinitions", new Dictionary<string, string>());
+                }
                 ContentTypes = LoadAllObjects("{0}/contenttypes", new Dictionary<string, string>());
-                FieldDefinitions = LoadAllObjects("{0}/fielddefinitions", new Dictionary<string, string>());
             }
         }
 
@@ -393,20 +421,19 @@ namespace Aprimo.ConfigurationWorkbookGenerator
             }
 
             RestResponse response = client.Execute(request);
-            if (response.StatusCode.ToString().Equals("unauthorized", StringComparison.OrdinalIgnoreCase))
+            var statusCode = response.StatusCode.ToString().ToLower();
+            switch (statusCode)
             {
-                accessToken = accessHelper.GetRefreshedToken();
-                request.AddOrUpdateParameter("Authorization", string.Format("Bearer " + accessToken));
-                response = client.Execute(request);
-            }
-            if (response.StatusCode.ToString().Equals("OK", StringComparison.OrdinalIgnoreCase))
-            {
-                return JsonConvert.DeserializeObject(response.Content);
+                case "unauthorized":
+                    accessToken = accessHelper.GetRefreshedToken();
+                    request.AddOrUpdateParameter("Authorization", string.Format("Bearer " + accessToken));
+                    response = client.Execute(request);
+                    break;
+                case "ok":
+                    return JsonConvert.DeserializeObject(response.Content);
+                default:
+                    throw new Exception(response.ErrorMessage, response.ErrorException);
 
-            }
-            if (response.StatusCode.ToString().Equals("BadRequest"))
-            {
-                throw new Exception(response.ErrorMessage, response.ErrorException);
             }
             return null;
         }
