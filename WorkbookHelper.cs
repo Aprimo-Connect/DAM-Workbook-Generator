@@ -63,7 +63,6 @@ namespace Aprimo.ConfigurationWorkbookGenerator
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
             ExcelPackage excelPackage = null;
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             ExcelPackage excelPackageWithNotes = new ExcelPackage();
             this.ExportObjects = exportObjects;
 
